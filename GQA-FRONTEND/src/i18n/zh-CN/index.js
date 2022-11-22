@@ -1,7 +1,7 @@
 export default {
     // 帮助
     InitDbHelp1: '确保已经安装并启动了Mysql',
-    InitDbHelp2: '我们会根据右侧配置为你自动创建数据库并导入初始数据',
+    InitDbHelp2: '我们会根据左侧配置为你自动创建数据库并导入初始数据',
     NicknameMessage: '昵称会代替真实姓名显示于系统中',
     SortRule: '排序必须大于0',
     NeedInput: '必须输入此项',
@@ -18,6 +18,7 @@ export default {
     FileRejected: '文件重复或大小/类型不被允许',
     DictHelp: "子级字典编码 必须以 父级字典编码 加 '_' 开头",
     // 单词
+    Github: 'Github',
     Page: '页面',
     Register: '注册',
     Button: '按钮',
@@ -113,6 +114,11 @@ export default {
     Gen: '生成',
     Plugin: '插件',
     Icon: '图标',
+    Icons: '图标',
+    Editor: '编辑器',
+    Statistic: '统计数据',
+    Cascader: '级联选择器',
+    ImportExport: '导入导出',
     Phone: '电话',
     New: '新',
     Old: '旧',
@@ -131,6 +137,7 @@ export default {
     Installed: '已安装',
     Describe: '描述',
     Choose: '选择',
+    Dark: '黑色',
     Theme: '主题',
     Display: '显示',
     Style: '风格',
@@ -211,4 +218,9 @@ export default {
     PageError404Title: '你发现了一个没人来过的页面',
     PageError404Home: '带我回去',
     DeptDataPermissionType: '部门数据权限分类',
+    PluginExample: '示例插件',
+    TreeTable: '树形表格',
+    PluginAchievement: '成就插件',
+    Category: '分类',
+    Obtain: '获得',
 }

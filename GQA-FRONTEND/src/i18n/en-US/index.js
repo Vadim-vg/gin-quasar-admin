@@ -1,7 +1,7 @@
 export default {
     // Help
     InitDbHelp1: 'Make sure MySQL is installed and started',
-    InitDbHelp2: 'We will create the database and import the initial data for you according to the configuration on the right',
+    InitDbHelp2: 'We will create the database and import the initial data for you according to the configuration on the left',
     NicknameMessage: 'The nickname will overwrite the real name in the system',
     SortRule: 'Sort must be greater than 0',
     NeedInput: 'Please type something',
@@ -18,6 +18,7 @@ export default {
     FileRejected: 'Duplicate file or size / type not allowed',
     DictHelp: "Child dict code must start with the parent dict code and '_'",
     // word
+    Github: 'Github',
     Page: 'Page',
     Register: 'Register',
     Button: 'Button',
@@ -113,6 +114,11 @@ export default {
     Gen: 'Generate',
     Plugin: 'Plugin',
     Icon: 'icon',
+    Icons: 'Icons',
+    Editor: 'Editor',
+    Statistic: 'Statistic',
+    Cascader: 'Cascader',
+    ImportExport: 'ImportAndExport',
     Phone: 'Phone',
     New: 'New',
     Old: 'Old',
@@ -130,6 +136,7 @@ export default {
     Installed: 'Installed',
     Describe: 'Describe',
     Choose: 'Choose',
+    Dark: 'Dark',
     Theme: 'Theme',
     Display: 'Display',
     Style: 'Style',
@@ -210,4 +217,9 @@ export default {
     PageError404Title: 'Oops. Nothing here...',
     PageError404Home: 'Take Me Home',
     DeptDataPermissionType: 'Department Data Permission Type',
+    PluginExample: 'PluginExample',
+    TreeTable: 'TreeTable',
+    PluginAchievement: 'PluginAchievement',
+    Category: 'Category',
+    Obtain: 'Obtain',
 }

@@ -1,9 +1,10 @@
 <template>
     <q-scroll-area style="height: calc(100%);" :class="darkThemeSideBar[0] === 'class' ? darkThemeSideBar[1] : ''"
         :style="darkThemeSideBar[0] === 'style' ? darkThemeSideBar[1] : {}">
-        <q-list>
+        <slot />
+        <q-list class="menu-list">
             <template v-for="(childrenItem, index) in topMenuChildren" :key="index">
-                <SideBarLeftItem :childrenItem="childrenItem" :initLevel="0" />
+                <SideBarLeftItem :childrenItem="childrenItem" :initLevel="0" style="padding-left: ;" />
             </template>
         </q-list>
     </q-scroll-area>
@@ -26,3 +27,9 @@ const props = defineProps({
 })
 const { topMenuChildren } = toRefs(props)
 </script>
+
+<style lang="scss" scoped>
+.menu-list :v-deep(.q-item) {
+    border-radius: 0 32px 32px 0
+}
+</style>

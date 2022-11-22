@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-btn dense round flat :icon="`${!right ? 'settings' : 'close'}`" @click="right = !right" />
+        <q-btn dense round flat :icon="`${!right ? 'ion-ios-options' : 'ion-md-close'}`" @click="right = !right" />
         <q-dialog v-model="right">
             <q-card style="height: 100%; width: 890px; max-width: 80vw;" class="text-center">
                 <q-card-section>
@@ -21,9 +21,14 @@
                     <q-separator />
 
                     <q-tab-panels v-model="tab" animated>
-                        <q-tab-panel name="basicSetting" class="text-left">
-                            <GqaLanguage />
-                            <DarkTheme />
+                        <q-tab-panel name="basicSetting" class="text-left q-gutter-y-xl">
+                            <q-field :label="$t('Dark') + $t('Theme')" dense stack-label style="width: 20%;">
+                                <template v-slot:control>
+                                    <DarkTheme />
+                                </template>
+                            </q-field>
+                            <GqaLanguage style="width: 20%;" />
+
                             <SideDrawer />
                         </q-tab-panel>
 
