@@ -18,7 +18,7 @@
                     <div class="items-center row">
                         <q-icon :name="prop.node.icon || 'share'" size="20px" class="q-mr-sm" />
                         <div class="text-weight-bold">
-                            {{ $t(prop.node.title) }}
+                            {{ selectOptionLabel(prop.node) }}
                         </div>
                         <q-radio v-model="defaultPage" dense :val="prop.node.name">
                             <q-tooltip anchor="center end" self="center left">
@@ -27,9 +27,8 @@
                         </q-radio>
                         <div class="row q-gutter-x-md" style="margin-left: 10px">
                             <q-checkbox v-model="buttonCheckMap[item.button_code]" dense :label="item.button_name"
-                                color="primary" v-for="item in prop.node.button" />
+                                color="primary" v-for="item in prop.node.button" :false-value="null" />
                         </div>
-
                     </div>
                 </template>
                 <template v-slot:default-body="prop">
@@ -41,7 +40,6 @@
             <q-spinner-gears size="50px" color="primary" />
         </q-inner-loading>
     </div>
-
 </template>
 
 <script setup>
@@ -50,7 +48,9 @@ import { useQuasar } from 'quasar'
 import { postAction } from 'src/api/manage'
 import { computed, onMounted, ref, toRefs } from 'vue'
 import { TreeToArray } from 'src/utils/arrayAndTree';
+import useCommon from 'src/composables/useCommon'
 
+const { selectOptionLabel } = useCommon()
 const $q = useQuasar()
 const url = {
     list: 'menu/get-menu-list',
@@ -88,7 +88,7 @@ onMounted(() => {
 
 const ticked = ref([])
 const getRoleMenuList = () => {
-    // 每次获取前，清空ticked
+    // Clear ticked before each getRoleMenuList
     ticked.value = []
     postAction(url.roleMenuList, {
         role_code: row.value.role_code,
@@ -156,7 +156,6 @@ const getRoleButtonList = () => {
         res.data.records.forEach(item => {
             buttonCheckMap.value[item.sys_button_button_code] = true
         })
-
     })
 }
 </script>

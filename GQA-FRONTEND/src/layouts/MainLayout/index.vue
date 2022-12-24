@@ -18,16 +18,16 @@
                 <q-select v-if="layoutView.split(' ')[0] === 'hHh'" id="menuSelect" dense borderless
                     v-model="currentTopMenu" :options="topMenu" map-options option-value="name"
                     @update:model-value="changeTop" style="margin-left: 20px;" dark
-                    :option-label="opt => Object(opt) === opt && 'title' in opt ? $t(opt.title) : opt.title">
+                    :option-label="opt => selectOptionLabel(opt)" options-selected-class="text-dark bg-grey-5">
                     <template v-slot:prepend>
                         <q-icon name="ion-md-apps" :class="darkTheme" />
                     </template>
                 </q-select>
 
                 <q-breadcrumbs v-if="findCurrentTopMenu" style="margin-left: 20px;">
-                    <q-breadcrumbs-el :label="$t(findCurrentTopMenu?.title)" :icon="findCurrentTopMenu?.icon"
+                    <q-breadcrumbs-el :label="selectOptionLabel(findCurrentTopMenu)" :icon="findCurrentTopMenu?.icon"
                         :class="darkTheme" />
-                    <q-breadcrumbs-el :label="$t(route.meta.title)" :icon="route.meta.icon" />
+                    <q-breadcrumbs-el :label="selectRouteLabel(route)" :icon="route.meta.icon" />
                 </q-breadcrumbs>
 
                 <q-space />
@@ -49,8 +49,8 @@
             <SideBarLeft :topMenuChildren="topMenuChildren">
                 <q-select v-if="layoutView.split(' ')[0] === 'lHh'" id="menuSelect" v-model="currentTopMenu"
                     :options="topMenu" map-options option-value="name" @update:model-value="changeTop" filled
-                    :dark="(themeStyle === 'Gin-Quasar-Admin' || themeStyle === 'Quasar') ? false : true" borderless
-                    :option-label="opt => Object(opt) === opt && 'title' in opt ? $t(opt.title) : opt.title">
+                    :dark="((themeStyle === 'Gin-Quasar-Admin' || themeStyle === 'Quasar') && !$q.dark.isActive) ? false : true"
+                    borderless :option-label="opt => Object(opt) === opt && 'title' in opt ? $t(opt.title) : opt.title">
                     <template v-slot:prepend>
                         <q-icon name="ion-md-apps" style="margin-right: 17px;" size="30px" />
                     </template>
@@ -74,10 +74,6 @@
             </q-page-sticky>
             <PageFooter />
         </q-page-container>
-
-        <!-- <q-footer reveal>
-            <PageFooter />
-        </q-footer> -->
 
         <UserProfile ref="userProfile" />
         <AchievementDialog ref="achievementDialog" />
@@ -105,10 +101,12 @@ import AddNoteTodo from './AddNoteTodo.vue';
 import { useRoute } from 'vue-router';
 import useDocument from 'src/composables/useDocument'
 import { useQuasar } from 'quasar';
+import useCommon from 'src/composables/useCommon'
 import XEUtils from 'xe-utils'
 import { postAction } from 'src/api/manage';
 import AchievementDialog from 'src/plugins/Achievement/AchievementDialog.vue';
-// 动态更改网站标题和favicon
+
+// Dynamically change the website title and favicon
 useDocument()
 
 const $q = useQuasar();
@@ -123,27 +121,28 @@ const topMenuChildren = ref({});
 const currentTopMenu = ref('');
 const fabPos = ref([3, 80]);
 const userProfile = ref(null);
-// 顶部导航栏总体控制是否mini模式
+// The top navigation bar generally controls whether it is mini mode
 const miniStateOut = ref(false)
-// 控制mini模式
+// Control mini mode
 const miniState = ref(false)
-// 监听总体变换mini模式
+// Monitor the overall transformation of mini mode
 watch(miniStateOut, (newVlaue) => {
     miniState.value = newVlaue
 })
-// 如果总体是mini模式，进行鼠标进入转换
+// If the overall mode is mini, perform mouse entry conversion
 const miniStateMouseover = () => {
     if (miniStateOut.value === true) {
         miniState.value = false
     }
 }
-// 如果总体是mini模式，进行鼠标移出转换
+// If the overall mode is mini, perform mouse out conversion
 const miniStateMouseout = () => {
     if (miniStateOut.value === true) {
         miniState.value = true
     }
 }
 
+const { selectOptionLabel, selectRouteLabel } = useCommon()
 const gqaFrontend = computed(() => storageStore.GetGqaFrontend())
 const drawerWidth = computed(() => settingStore.GetSideDrawerWidth())
 const layoutView = computed(() => settingStore.GetLayoutView())

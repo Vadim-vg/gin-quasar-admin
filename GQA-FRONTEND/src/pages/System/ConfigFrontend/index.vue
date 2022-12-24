@@ -29,7 +29,7 @@
                                 <GqaAvatar src="favicon.ico" />
                             </template>
                             <template v-else-if="props.row.config_item === 'bannerImage'">
-                                默认效果
+                                Default
                             </template>
                             <template v-else-if="props.row.config_item === 'loginLayoutStyle'">
                                 <GqaDictShow :dictCode="props.row.item_default" />
@@ -132,16 +132,25 @@
                         </q-td>
                     </template>
                     <template v-slot:body-cell-actions="props">
-                        <q-td :props="props">
-                            <div class="q-gutter-md">
-                                <q-btn flat dense icon="eva-save-outline" color="primary" @click="handleSave(props.row)"
-                                    :label="$t('Save')" v-has="'config-frontend:save'" />
-                                <q-btn flat dense icon="mdi-lock-reset" color="warning" @click="handleReset(props.row)"
-                                    :label="$t('Reset')" v-has="'config-frontend:reset'" />
-                                <q-btn flat dense icon="delete_outline" color="negative"
-                                    @click="handleDelete(props.row)" :label="$t('Delete')"
-                                    v-has="'config-frontend:delete'" />
-                            </div>
+                        <q-td :props="props" class="q-gutter-x-xs">
+                            <q-btn flat dense rounded icon="eva-save-outline" color="primary"
+                                @click="handleSave(props.row)" v-has="'config-frontend:save'">
+                                <q-tooltip>
+                                    {{ $t('Save') }}
+                                </q-tooltip>
+                            </q-btn>
+                            <q-btn flat dense rounded icon="mdi-lock-reset" color="warning"
+                                @click="handleReset(props.row)" v-has="'config-frontend:reset'">
+                                <q-tooltip>
+                                    {{ $t('Reset') }}
+                                </q-tooltip>
+                            </q-btn>
+                            <q-btn flat dense rounded icon="delete_outline" color="negative"
+                                @click="handleDelete(props.row)" v-has="'config-frontend:delete'">
+                                <q-tooltip>
+                                    {{ $t('Delete') }}
+                                </q-tooltip>
+                            </q-btn>
                         </q-td>
                     </template>
                 </q-table>
@@ -231,7 +240,7 @@ const handleUploadBannerImage = (scope) => {
     if (!bannerImage.value) {
         $q.notify({
             type: 'negative',
-            message: '请选择图片！',
+            message: t('Please') + t('Select') + t('File'),
         })
         return
     }
@@ -246,7 +255,7 @@ const handleUploadBannerImage = (scope) => {
             bannerImage.value = null
             $q.notify({
                 type: 'positive',
-                message: '首页大图上传成功！',
+                message: t('Upload') + t('Success'),
             })
             scope.set()
         }
@@ -256,7 +265,7 @@ const handleUploadLogo = (scope) => {
     if (!logoFile.value) {
         $q.notify({
             type: 'negative',
-            message: '请选择文件！',
+            message: t('Please') + t('Select') + t('File'),
         })
         return
     }
@@ -271,7 +280,7 @@ const handleUploadLogo = (scope) => {
             logoFile.value = null
             $q.notify({
                 type: 'positive',
-                message: '网站Logo上传成功！',
+                message: t('Upload') + t('Success'),
             })
             scope.set()
         }
@@ -281,7 +290,7 @@ const handleUploadFavicon = (scope) => {
     if (!faviconFile.value) {
         $q.notify({
             type: 'negative',
-            message: '请选择文件！',
+            message: t('Please') + t('Select') + t('File'),
         })
         return
     }
@@ -296,7 +305,7 @@ const handleUploadFavicon = (scope) => {
             faviconFile.value = null
             $q.notify({
                 type: 'positive',
-                message: '网站Favicon上传成功！',
+                message: t('Upload') + t('Success'),
             })
             scope.set()
         }
@@ -305,7 +314,7 @@ const handleUploadFavicon = (scope) => {
 const rejected = (rejectedEntries) => {
     $q.notify({
         type: 'negative',
-        message: '文件重复或大小/类型不被允许，请联系管理员！',
+        message: t('SizeOrExtError'),
     })
 }
 const handleSetLoginLayout = (event, scope) => {

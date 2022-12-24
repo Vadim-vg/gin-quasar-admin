@@ -4,7 +4,7 @@
         <q-route-tab exact replace v-for="tab in tabMenus" :to="tab.path" :key="tab.path" :name="tab.path">
             <template v-slot>
                 <q-icon size="1.1rem" v-if="tab.meta.icon" :name="tab.meta.icon" />
-                <span class="tab-label">{{ $t(tab.meta.title) || $t('Unknown') }}</span>
+                <span class="tab-label">{{ selectRouteLabel(tab) }}</span>
                 <q-icon v-if="tab.name !== defaultPage" class="tab-close" name="close"
                     @click.prevent.stop="removeTab(tab)" />
                 <q-menu touch-position context-menu>
@@ -42,7 +42,9 @@ import { useTabMenuStore } from 'src/stores/tabMenu'
 import { useRoute, useRouter } from 'vue-router';
 import useTheme from 'src/composables/useTheme';
 import { usePermissionStore } from 'src/stores/permission';
+import useCommon from 'src/composables/useCommon'
 
+const { selectRouteLabel } = useCommon()
 const tabMenuStore = useTabMenuStore()
 const { darkThemeTab } = useTheme()
 const router = useRouter()
@@ -77,7 +79,7 @@ const removeTab = (tab) => {
 const removeOtherTab = (tab) => {
     tabMenuStore.DestroyTabMenu()
     tabMenuStore.AddTabMenu(tab)
-    // 没有点击在当前激活菜单上，那么跳转到这个菜单
+    // If the current active menu is not clicked, then jump to this menu
     if (tab.path !== route.path) {
         nextTick(() => {
             router.push({ path: tab.path })
@@ -86,7 +88,7 @@ const removeOtherTab = (tab) => {
 }
 const removeRightTab = (tab) => {
     tabMenuStore.RemoveRightTab(tab)
-    // 没有点击在当前激活菜单上，那么跳转到这个菜单
+    // If the current active menu is not clicked, then jump to this menu
     if (tab.path !== route.path) {
         nextTick(() => {
             router.push({ path: tab.path })
@@ -95,7 +97,7 @@ const removeRightTab = (tab) => {
 }
 const removeLeftTab = (tab) => {
     tabMenuStore.RemoveLeftTab(tab)
-    // 没有点击在当前激活菜单上，那么跳转到这个菜单
+    // If the current active menu is not clicked, then jump to this menu
     if (tab.path !== route.path) {
         nextTick(() => {
             router.push({ path: tab.path })

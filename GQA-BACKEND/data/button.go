@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/global"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/model"
+	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/utils"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
@@ -17,15 +18,15 @@ func (s *sysButton) LoadData() error {
 		var count int64
 		tx.Model(&model.SysButton{}).Count(&count)
 		if count != 0 {
-			fmt.Println("[Gin-Quasar-Admin] --> sys_button 表的初始数据已存在，跳过初始化数据！数据量：", count)
-			global.GqaLogger.Warn("[Gin-Quasar-Admin] --> sys_button 表的初始数据已存在，跳过初始化数据！", zap.Any("数据量", count))
+			fmt.Println(utils.GqaI18nWithData("SkipInsertWithData", "sys_button"), count)
+			global.GqaLogger.Warn(utils.GqaI18nWithData("SkipInsertWithData", "sys_button"), zap.Any("count", count))
 			return nil
 		}
 		if err := tx.Create(&sysButtonData).Error; err != nil { // 遇到错误时回滚事务
 			return err
 		}
-		fmt.Println("[Gin-Quasar-Admin] --> sys_button 表初始数据成功！")
-		global.GqaLogger.Info("[Gin-Quasar-Admin] --> sys_button 表初始数据成功！")
+		fmt.Println(utils.GqaI18nWithData("TableInitSuccess", "sys_button"))
+		global.GqaLogger.Info(utils.GqaI18nWithData("TableInitSuccess", "sys_button"))
 		return nil
 	})
 }
@@ -76,8 +77,8 @@ var sysButtonData = []model.SysButton{
 	{MenuName: "log-login", ButtonName: "详情", ButtonCode: "log-login:detail"},
 	{MenuName: "log-login", ButtonName: "删除", ButtonCode: "log-login:delete"},
 
-	//{MenuName: "log-operation", ButtonName: "详情", ButtonCode: "log-operation:detail"},
-	//{MenuName: "log-operation", ButtonName: "删除", ButtonCode: "log-operation:delete"},
+	{MenuName: "log-operation", ButtonName: "详情", ButtonCode: "log-operation:detail"},
+	{MenuName: "log-operation", ButtonName: "删除", ButtonCode: "log-operation:delete"},
 
 	{MenuName: "notice", ButtonName: "新增消息", ButtonCode: "notice:add"},
 	{MenuName: "notice", ButtonName: "发送", ButtonCode: "notice:send"},

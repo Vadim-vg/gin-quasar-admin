@@ -1,6 +1,6 @@
 <h1>Gin-Quasar-Admin<sup>v2</sup></h1>
 
-[English](README.en.md) | 简体中文
+[English](README.en.md) | 简体中文 | [Wiki](https://github.com/Junvary/gin-quasar-admin/wiki)
 
 <div align=center>
 <img src="https://i.loli.net/2020/12/14/cnJoF9r1BXY7Da5.png" width=150" height="150" />
@@ -32,13 +32,13 @@ QQ群号：342045316
 
 ### 项目截图：
 
-![login.png](https://s2.loli.net/2022/11/21/GPNdE5HjlIKFfr8.png)
+![white1.png](https://s2.loli.net/2022/12/01/kEbBwuLi37VlGcF.png)
 
-![login-dark.png](https://s2.loli.net/2022/11/21/rLUOuhxt6m457oA.png)
+![dark1.png](https://s2.loli.net/2022/12/01/feywBOXFDRgk9rY.png)
 
-![dashboard-dark.png](https://s2.loli.net/2022/11/21/A9tdvTMhZbJix2f.png)
+![white2.png](https://s2.loli.net/2022/12/01/oNSz8dYDqFZCRxI.png)
 
-![dashboard.png](https://s2.loli.net/2022/11/21/FiTSxKL8Oo239Vn.png)
+![dark2.png](https://s2.loli.net/2022/12/01/AJL7zjm9RiG6fQr.png)
 
 
 ### 在线体验
