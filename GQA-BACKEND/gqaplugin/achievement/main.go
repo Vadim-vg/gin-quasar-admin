@@ -5,7 +5,9 @@ import (
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/gqaplugin/achievement/model"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/gqaplugin/achievement/router/privaterouter"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/gqaplugin/achievement/router/publicrouter"
+	gqaModel "github.com/Junvary/gin-quasar-admin/GQA-BACKEND/model"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 var PluginAchievement = new(Achievement)
@@ -14,6 +16,10 @@ type Achievement struct{}
 
 func (*Achievement) PluginCode() string { //实现接口方法，插件编码。返回值：请使用 "plugin-"前缀开头。
 	return "plugin-achievement"
+}
+
+func (*Achievement) PluginSort() uint { //实现接口方法，插件排序
+	return data.PluginSort
 }
 
 func (*Achievement) PluginName() string { //实现接口方法，插件名称
@@ -46,8 +52,12 @@ func (*Achievement) PluginMigrate() []interface{} { //实现接口方法，迁�
 	return ModelList
 }
 
-func (*Achievement) PluginData() []interface{ LoadData() (err error) } { //实现接口方法，初始化数据
-	var DataList = []interface{ LoadData() (err error) }{
+func (*Achievement) PluginData() []interface {
+	LoadData(c *gin.Context) (err error)
+} { //实现接口方法，初始化数据
+	var DataList = []interface {
+		LoadData(c *gin.Context) (err error)
+	}{
 		data.PluginAchievementSysApi,
 		data.PluginAchievementSysRoleApi,
 		data.PluginAchievementSysMenu,
@@ -57,6 +67,6 @@ func (*Achievement) PluginData() []interface{ LoadData() (err error) } { //实�
 	return DataList
 }
 
-func (p *Achievement) PluginCron() map[string]func() {
-	return nil
+func (p *Achievement) PluginCron() ([]gqaModel.SysCron, map[uuid.UUID]func()) {
+	return nil, nil
 }

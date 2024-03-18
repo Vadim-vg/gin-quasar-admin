@@ -2,12 +2,13 @@
     <q-dialog v-model="roleUserVisible" position="right">
         <q-card style="min-width: 500px; max-width: 45vw; height: 100%;">
             <q-card-section>
-                {{record.role_name}}
+                {{ record.role_name }}
             </q-card-section>
             <q-table row-key="id" separator="cell" :rows="tableData" :columns="columns" v-model:pagination="pagination"
                 :rows-per-page-options="pageOptions" :loading="loading" @request="onRequest">
                 <template v-slot:top="props">
-                    <q-btn dense color="primary" @click="showAddUserForm()" :label="$t('Add') + $t('User')" />
+                    <q-btn dense color="primary" @click="showAddUserForm()"
+                        :label="$t('Add') + $t('Existing') + $t('User')" />
                     <q-space />
                     <!-- <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                         @click="props.toggleFullscreen" class="q-ml-md" /> -->
@@ -28,14 +29,10 @@
 
 <script setup>
 import useTableData from 'src/composables/useTableData'
-import { useQuasar } from 'quasar'
 import { postAction } from 'src/api/manage'
 import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import SelectUserDialog from 'src/components/GqaSeleteUser/SelectUserDialog'
+import SelectUserDialog from 'src/components/GqaSeleteUser/SelectUserDialog.vue'
 
-const $q = useQuasar()
-const { t } = useI18n()
 const url = {
     list: 'role/query-user-by-role',
     removeUser: 'role/remove-role-user',
@@ -50,6 +47,8 @@ const columns = computed(() => {
     ]
 })
 const {
+    $q,
+    t,
     pagination,
     queryParams,
     pageOptions,

@@ -2,7 +2,7 @@ import { boot } from 'quasar/wrappers'
 import { LoadingBar, Loading, QSpinnerGears } from 'quasar'
 import { useUserStore } from 'src/stores/user'
 import { usePermissionStore } from 'src/stores/permission'
-import useConfig from 'src/composables/useConfig'
+import { AllowList } from 'src/config/config'
 
 import { i18n } from './i18n'
 
@@ -25,16 +25,16 @@ function stopLoading() {
     LoadingBar.stop()
 }
 
-export default boot(({ router, store }) => {
+export default boot(({ router }) => {
     router.beforeEach(async (to, from, next) => {
         const userStore = useUserStore()
         const permissionStore = usePermissionStore()
         startLoading()
         const token = userStore.GetToken()
-        const { AllowList } = useConfig()
         if (token) {
             if (AllowList.indexOf(to.path) !== -1) {
-                next({ path: '/' })
+                // next({ path: '/' })
+                next()
                 stopLoading()
             } else {
                 if (!permissionStore.userMenu.length) {
@@ -46,7 +46,7 @@ export default boot(({ router, store }) => {
                         next({ ...to, replace: true })
                     } else {
                         stopLoading()
-                        store.dispatch('user/HandleLogout')
+                        userStore.HandleLogout()
                         next({ path: '/', replace: true })
                     }
                 } else {

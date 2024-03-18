@@ -1,8 +1,9 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
-import { Notify, Dialog } from 'quasar'
+import { Notify, Dialog, Cookies } from 'quasar'
 import { i18n } from './i18n'
 import { useUserStore } from 'src/stores/user'
+import { DemoMode, ForbiddenUrl } from 'src/config/config'
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -13,43 +14,11 @@ import { useUserStore } from 'src/stores/user'
 
 const api = axios.create({
     baseURL: process.env.API,
-    timeout: 40000,
+    timeout: 120000,
     withCredentials: false
 })
 
-const forbiddenUrl = [
-    'user/edit-user',
-    'user/delete-user-by-id',
-    'user/reset-password',
-    'user/change-password',
-    'role/edit-role',
-    'role/delete-role-by-id',
-    'role/edit-role-menu',
-    'role/edit-role-api',
-    'role/remove-role-user',
-    'role/edit-role-dept-data-permission',
-    'menu/edit-menu',
-    'menu/delete-menu-by-id',
-    'dept/edit-dept',
-    'dept/delete-dept-by-id',
-    'dept/remove-dept-user',
-    'dict/edit-dict',
-    'dict/delete-dict-by-id',
-    'api/edit-api',
-    'api/delete-api-by-id',
-    'config-backend/edit-config-backend',
-    'config-backend/delete-config-backend-by-id',
-    'config-frontend/edit-config-frontend',
-    'config-frontend/delete-config-frontend-by-id',
-    'log/delete-log-login-by-id',
-    'log/delete-log-operation-by-id',
-    'notice/delete-notice-by-id',
-    'note-todo/edit-note-todo',
-    'note-todo/delete-note-todo-by-id',
-    'user-online/kick-online-user'
-]
-
-export default boot(({ app, router, store }) => {
+export default boot(({ app, router }) => {
     const userStore = useUserStore()
 
     api.interceptors.request.use(request => {
@@ -57,18 +26,15 @@ export default boot(({ app, router, store }) => {
         request.headers = {
             'Content-Type': 'application/json;charset=utf-8',
             'Gqa-Token': token,
+            'Gqa-Lang': Cookies.get("gqa-language") || "zh-CN"
         }
-
-        /* 👇demo mode👇 */
-        if (forbiddenUrl.some(item => item === request.url)) {
+        if (DemoMode && ForbiddenUrl.some(item => item === request.url)) {
             Notify.create({
                 type: 'negative',
                 message: i18n.global.t('DemoMode')
             })
             return
         }
-        /* 👆demo mode👆 */
-
         return request
     }, error => {
         Notify.create({
@@ -111,7 +77,6 @@ export default boot(({ app, router, store }) => {
                             },
                         }).onOk(() => {
                             userStore.HandleLogout()
-                            // store.dispatch('user/HandleLogout')
                             router.push({ name: 'login' })
                         })
                     } else {
@@ -139,7 +104,6 @@ export default boot(({ app, router, store }) => {
                 },
             }).onOk(() => {
                 userStore.HandleLogout()
-                // store.dispatch('user/HandleLogout')
                 router.push({ name: 'login' })
             })
         }

@@ -5,18 +5,24 @@ English | [简体中文](README.md) | [Wiki](https://github.com/Junvary/gin-quas
 <div align=center>
 <img src="https://i.loli.net/2020/12/14/cnJoF9r1BXY7Da5.png" width=150" height="150" />
 <h1>Gin-Quasar-Admin<sup>v2</sup></h1>
-<img src="https://img.shields.io/badge/Vue-3.2.45-brightgreen"/> 
-<img src="https://img.shields.io/badge/Quasar-2.10.2-brightgreen"/>                          
-<img src="https://img.shields.io/badge/Go-1.19.3-brightgreen"/>                          
-<img src="https://img.shields.io/badge/Gin-1.8.1-brightgreen"/>                              
-<img src="https://img.shields.io/badge/Gorm-1.24.0-brightgreen"/>                  
+<img src="https://img.shields.io/badge/Vue-3.2.47-brightgreen"/> 
+<img src="https://img.shields.io/badge/Quasar-2.14.3-brightgreen"/>                          
+<img src="https://img.shields.io/badge/Go-1.21.6-brightgreen"/>                          
+<img src="https://img.shields.io/badge/Gin-1.9.1-brightgreen"/>                              
+<img src="https://img.shields.io/badge/Gorm-1.25.6-brightgreen"/>                  
 <img src="https://img.shields.io/badge/License-MIT-brightgreen"/>                                                                 </div>
 
 
 
 
 
-#### A full-featured management system based on Quasar2/Vue3/Go/Gin/Gorm,it supports i18n.
+
+
+
+
+
+
+#### A full-featured management system based on Quasar2/Vue3/Vite/Go/Gin/Gorm,it supports i18n.
 
 #### You can develop plugins and configure Gin-Quasar-Admin as your personalized website,it's easy.
 
@@ -40,7 +46,7 @@ English | [简体中文](README.md) | [Wiki](https://github.com/Junvary/gin-quas
 
 1. http://81.68.159.232/
 2. username: admin
-3. pwd: 123456
+3. pwd: gqa#123456
 
 ## Installation：
 

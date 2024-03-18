@@ -13,15 +13,15 @@ export default function useTheme() {
             return 'bg-dark text-white'
         } else {
             if (themeStyle.value === 'Gin-Quasar-Admin') {
-                return 'bg-grey-10 text-white'
+                return 'bg-white text-black'
             }
             if (themeStyle.value === 'Quasar') {
                 return 'bg-primary text-white'
             }
-            if (themeStyle.value === 'Element Plus') {
+            if (themeStyle.value === 'Element') {
                 return 'bg-primary text-white'
             }
-            if (themeStyle.value === 'Ant Design Vue') {
+            if (themeStyle.value === 'Ant Design') {
                 return 'bg-primary text-white'
             }
         }
@@ -36,10 +36,10 @@ export default function useTheme() {
             if (themeStyle.value === 'Quasar') {
                 return 'bg-primary text-white'
             }
-            if (themeStyle.value === 'Element Plus') {
+            if (themeStyle.value === 'Element') {
                 return 'bg-primary text-white'
             }
-            if (themeStyle.value === 'Ant Design Vue') {
+            if (themeStyle.value === 'Ant Design') {
                 return 'bg-primary text-white'
             }
         }
@@ -54,10 +54,10 @@ export default function useTheme() {
             if (themeStyle.value === 'Quasar') {
                 return 'bg-primary text-white'
             }
-            if (themeStyle.value === 'Element Plus') {
+            if (themeStyle.value === 'Element') {
                 return 'bg-primary text-white'
             }
-            if (themeStyle.value === 'Ant Design Vue') {
+            if (themeStyle.value === 'Ant Design') {
                 return 'bg-primary text-white'
             }
         }
@@ -72,46 +72,46 @@ export default function useTheme() {
             if (themeStyle.value === 'Quasar') {
                 return 'bg-white text-primary'
             }
-            if (themeStyle.value === 'Element Plus') {
+            if (themeStyle.value === 'Element') {
                 return 'bg-white text-primary'
             }
-            if (themeStyle.value === 'Ant Design Vue') {
+            if (themeStyle.value === 'Ant Design') {
                 return 'bg-white text-primary'
             }
         }
     });
     const darkThemeSideBar = computed(() => {
         if ($q.dark.isActive) {
-            return ['class', 'bg-grey-10 text-white']
+            return 'bg-grey-10 text-white'
         } else {
             if (themeStyle.value === 'Gin-Quasar-Admin') {
-                return ['class', 'bg-grey-3 text-grey-10']
+                return 'bg-white text-black'
             }
             if (themeStyle.value === 'Quasar') {
-                return ['class', 'bg-white text-dark']
+                return 'bg-white text-dark'
             }
-            if (themeStyle.value === 'Element Plus') {
-                return ['style', { backgroundColor: '#545c64', color: 'white' }]
+            if (themeStyle.value === 'Element') {
+                return 'bg-#545c64 text-white'
             }
-            if (themeStyle.value === 'Ant Design Vue') {
-                return ['style', { backgroundColor: '#001529', color: 'white' }]
+            if (themeStyle.value === 'Ant Design') {
+                return 'bg-#000c17 text-white'
             }
         }
     })
     const darkThemeSelect = computed(() => {
         if ($q.dark.isActive) {
-            return 'bg-grey-10 text-white'
+            return 'bg-grey-8 text-white'
         } else {
             if (themeStyle.value === 'Gin-Quasar-Admin') {
-                return 'bg-grey-5 text-grey-10'
+                return 'bg-grey-5 text-dark'
             }
             if (themeStyle.value === 'Quasar') {
                 return 'bg-primary text-white'
             }
-            if (themeStyle.value === 'Element Plus') {
+            if (themeStyle.value === 'Element') {
                 return 'bg-#545c64 text-yellow'
             }
-            if (themeStyle.value === 'Ant Design Vue') {
+            if (themeStyle.value === 'Ant Design') {
                 return 'bg-primary text-white'
             }
         }

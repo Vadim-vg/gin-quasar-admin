@@ -14,8 +14,7 @@
             <q-card-section class="col q-gutter-y-md">
                 <q-card-section class="row q-gutter-x-md items-center">
                     <q-input outlined dense style="width: 20%" v-model="queryParams.username" :label="$t('Username')" />
-                    <q-input outlined dense style="width: 20%" v-model="queryParams.real_name"
-                        :label="$t('RealName')" />
+                    <q-input outlined dense style="width: 20%" v-model="queryParams.real_name" :label="$t('RealName')" />
                     <q-btn color="primary" @click="handleSearch" :label="$t('Search')" />
                     <q-btn color="primary" @click="resetSearch" :label="$t('Reset')" />
                 </q-card-section>
@@ -32,7 +31,7 @@
                         </template>
                         <template v-slot:body-cell-avatar="props">
                             <q-td :props="props">
-                                <GqaAvatar :src="props.row.avatar" />
+                                <gqa-avatar :src="props.row.avatar" />
                             </q-td>
                         </template>
                         <template v-slot:body-cell-gender="props">
@@ -71,45 +70,44 @@
                             </q-td>
                         </template>
                         <template v-slot:body-cell-actions="props">
-                            <q-td :props="props" class="q-gutter-x-xs">
-                                <q-btn flat dense rounded icon="eva-edit-2-outline" color="primary"
-                                    @click="showEditForm(props.row)" v-has="'user:edit'">
-                                    <q-tooltip>
-                                        {{ $t('Edit') }}
-                                    </q-tooltip>
+                            <q-td :props="props" class="q-gutter-x-md">
+                                <q-btn flat dense color="primary" :label="$t('Edit')" @click="showEditForm(props.row)"
+                                    v-has="'user:edit'">
                                 </q-btn>
-                                <q-btn flat dense rounded icon="mdi-lock-reset" color="warning"
-                                    @click="resetPassword(props.row)" v-has="'user:password'">
-                                    <q-tooltip>
-                                        {{ $t('Reset') + $t('Password') }}
-                                    </q-tooltip>
-                                </q-btn>
-                                <q-btn flat dense rounded icon="delete_outline" color="negative"
-                                    @click="handleDelete(props.row)" v-has="'user:delete'">
-                                    <q-tooltip>
-                                        {{ $t('Delete') }}
-                                    </q-tooltip>
-                                </q-btn>
+                                <q-btn-dropdown flat dense color="primary" :label="$t('More')" menu-anchor="bottom left"
+                                    menu-self="top left">
+                                    <q-list dense>
+                                        <q-item clickable v-close-popup @click="resetPassword(props.row)"
+                                            v-has="'user:password'">
+                                            <q-item-section>
+                                                <q-item-label>{{ $t('Reset') + $t('Password') }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
+
+                                        <q-item clickable v-close-popup @click="handleDelete(props.row)"
+                                            v-has="'user:delete'">
+                                            <q-item-section>
+                                                <q-item-label>{{ $t('Delete') }}</q-item-label>
+                                            </q-item-section>
+                                        </q-item>
+                                    </q-list>
+                                </q-btn-dropdown>
                             </q-td>
                         </template>
                     </q-table>
                 </q-card-section>
             </q-card-section>
         </q-card>
-        <recordDetail ref="recordDetailDialog" @handleFinish="handleFinish" />
+        <recordDetail ref="recordDetailDialog" @handleFinish="handleFinish" :deptList="deptList" />
     </q-page>
 </template>
 
 <script setup>
 import useTableData from 'src/composables/useTableData'
-import { useQuasar } from 'quasar'
 import { postAction } from 'src/api/manage'
 import { computed, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import recordDetail from './modules/recordDetail'
+import recordDetail from './modules/recordDetail.vue'
 
-const $q = useQuasar()
-const { t } = useI18n()
 const url = {
     list: 'user/get-user-list',
     delete: 'user/delete-user-by-id',
@@ -131,11 +129,12 @@ const columns = computed(() => {
     ]
 })
 const {
+    $q,
+    t,
     pagination,
     queryParams,
     pageOptions,
     GqaDictShow,
-    GqaAvatar,
     loading,
     tableData,
     recordDetailDialog,

@@ -1,13 +1,15 @@
 <template>
     <div class="row q-gutter-md">
-        <q-btn v-for="(value, key, index) in themeStyleList" :key="index" size="90px" @click="setThemeStyle(key)">
-            <q-icon name="check_box" size="40px" style="top: 2px; right: 2px" color="negative"
-                class="absolute all-pointer-events" v-if="themeStyle === key" />
-            <q-avatar size="160px">
-                <img :src="value">
-            </q-avatar>
-            <div class="absolute-bottom text-subtitle1 text-center bg-grey">
-                {{ key }}{{ $t('Style') }}
+        <q-btn class="q-hoverable cursor-pointer text-center" v-for="(value, key, index) in themeStyleList" :key="index"
+            @click="setThemeStyle(key)">
+            <div class="column items-center">
+                <q-icon name="check_box" size="25px" style="top: 2px; right: 2px" color="negative"
+                    class="absolute all-pointer-events" v-if="themeStyle === key" />
+                <div class="q-focus-helper"></div>
+                <q-avatar size="100px">
+                    <img :src="value">
+                </q-avatar>
+                <div>{{ key }}{{ $t('Style') }}</div>
             </div>
         </q-btn>
     </div>
@@ -17,14 +19,13 @@
 import { computed } from 'vue';
 import { useSettingStore } from 'src/stores/setting';
 import { setCssVar, Cookies } from 'quasar';
-import useConfig from 'src/composables/useConfig';
+import { ThemeStyleQuasar, ThemeStyleElement, ThemeStyleAnt } from "src/config/default"
 
-const { ThemeStyleQuasar, ThemeStyleElement, ThemeStyleAnt } = useConfig()
 const themeStyleList = {
     'Gin-Quasar-Admin': 'icons/gqa128.png',
     'Quasar': 'icon/quasar.svg',
-    'Element Plus': 'icon/element-plus.svg',
-    'Ant Design Vue': 'icon/ant-design-vue.svg',
+    'Element': 'icon/element-plus.svg',
+    'Ant Design': 'icon/ant-design-vue.svg',
 }
 
 const settingStore = useSettingStore()
@@ -41,12 +42,12 @@ const setThemeStyle = (style) => {
                 setBrand(q, ThemeStyleQuasar[q])
             }
             break
-        case 'Element Plus':
+        case 'Element':
             for (let e in ThemeStyleElement) {
                 setBrand(e, ThemeStyleElement[e])
             }
             break
-        case 'Ant Design Vue':
+        case 'Ant Design':
             for (let a in ThemeStyleAnt) {
                 setBrand(a, ThemeStyleAnt[a])
             }

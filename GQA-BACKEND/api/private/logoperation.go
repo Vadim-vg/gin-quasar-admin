@@ -1,28 +1,25 @@
 package private
 
 import (
-	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/global"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/model"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/utils"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 type ApiLogOperation struct{}
 
 func (a *ApiLogOperation) GetLogOperationList(c *gin.Context) {
-	var requestLogList model.RequestGetLogOperationList
-	if err := model.RequestShouldBindJSON(c, &requestLogList); err != nil {
+	var toGetDataList model.RequestGetLogOperationList
+	if err := model.RequestShouldBindJSON(c, &toGetDataList); err != nil {
 		return
 	}
-	if err, logList, total := servicePrivate.ServiceLogOperation.GetLogOperationList(requestLogList); err != nil {
-		global.GqaLogger.Error(utils.GqaI18n("GetListFailed"), zap.Any("err", err))
-		model.ResponseErrorMessage(utils.GqaI18n("GetListFailed")+err.Error(), c)
+	if err, dataList, total := servicePrivate.ServiceLogOperation.GetLogOperationList(toGetDataList); err != nil {
+		model.ResponseErrorMessageWithLog(utils.GqaI18n(c, "GetListFailed")+err.Error(), c)
 	} else {
 		model.ResponseSuccessData(model.ResponsePage{
-			Records:  logList,
-			Page:     requestLogList.Page,
-			PageSize: requestLogList.PageSize,
+			Records:  dataList,
+			Page:     toGetDataList.Page,
+			PageSize: toGetDataList.PageSize,
 			Total:    total,
 		}, c)
 	}
@@ -34,9 +31,8 @@ func (a *ApiLogOperation) DeleteLogOperationById(c *gin.Context) {
 		return
 	}
 	if err := servicePrivate.ServiceLogOperation.DeleteLogOperationById(toDeleteId.Id); err != nil {
-		global.GqaLogger.Error(utils.GqaI18n("DeleteFailed"), zap.Any("err", err))
-		model.ResponseErrorMessage(utils.GqaI18n("DeleteFailed")+err.Error(), c)
+		model.ResponseErrorMessageWithLog(utils.GqaI18n(c, "DeleteFailed")+err.Error(), c)
 	} else {
-		model.ResponseSuccessMessage(utils.GqaI18n("DeleteSuccess"), c)
+		model.ResponseSuccessMessage(utils.GqaI18n(c, "DeleteSuccess"), c)
 	}
 }

@@ -5,11 +5,12 @@ import (
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/global"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/model"
 	"github.com/Junvary/gin-quasar-admin/GQA-BACKEND/utils"
+	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strings"
 )
 
-func DeptDataPermission(username string, db *gorm.DB) (err error, permissionDb *gorm.DB) {
+func DeptDataPermission(c *gin.Context, username string, db *gorm.DB) (err error, permissionDb *gorm.DB) {
 	user := model.SysUser{
 		Username: username,
 	}
@@ -26,8 +27,8 @@ func DeptDataPermission(username string, db *gorm.DB) (err error, permissionDb *
 			permissionCustomList = append(permissionCustomList, ss...)
 		}
 	}
-	tList := utils.RemoveDuplicateElementFromSlice(permissionTypeList)
-	cList := utils.RemoveDuplicateElementFromSlice(permissionCustomList)
+	tList := utils.SliceSortCompact(permissionTypeList)
+	cList := utils.SliceSortCompact(permissionCustomList)
 	tempDb := db
 
 Loop:
@@ -55,7 +56,7 @@ Loop:
 					deptUserList = append(deptUserList, u.SysUserUsername)
 				}
 			}
-			allUser := utils.RemoveDuplicateElementFromSlice(deptUserList)
+			allUser := utils.SliceSortCompact(deptUserList)
 			permissionDb = tempDb.Or(tempDb.Where("created_by in ?", allUser))
 		case "deptDataPermissionType_deptAndChildren":
 			// Department data permission including sub departments
@@ -69,7 +70,7 @@ Loop:
 				deptListTotal = append(deptListTotal, dept.DeptCode)
 				deptListTotal = append(deptListTotal, GetChildrenFromDept(dept.DeptCode)...)
 			}
-			deptListTotal = utils.RemoveDuplicateElementFromSlice(deptListTotal)
+			deptListTotal = utils.SliceSortCompact(deptListTotal)
 			var deptUserList []string
 			for _, dept := range deptListTotal {
 				var deptUser []model.SysDeptUser
@@ -78,7 +79,7 @@ Loop:
 					deptUserList = append(deptUserList, u.SysUserUsername)
 				}
 			}
-			allUser := utils.RemoveDuplicateElementFromSlice(deptUserList)
+			allUser := utils.SliceSortCompact(deptUserList)
 			permissionDb = tempDb.Or(tempDb.Where("created_by in ?", allUser))
 		case "deptDataPermissionType_custom":
 			// User defined department data permission
@@ -90,11 +91,11 @@ Loop:
 					deptUserList = append(deptUserList, u.SysUserUsername)
 				}
 			}
-			allUser := utils.RemoveDuplicateElementFromSlice(deptUserList)
+			allUser := utils.SliceSortCompact(deptUserList)
 			permissionDb = tempDb.Or(tempDb.Where("created_by in ?", allUser))
 		default:
 			permissionDb = tempDb
-			return errors.New(utils.GqaI18n("NoConfig")), nil
+			return errors.New(utils.GqaI18n(c, "NoConfig")), nil
 		}
 	}
 	return nil, permissionDb

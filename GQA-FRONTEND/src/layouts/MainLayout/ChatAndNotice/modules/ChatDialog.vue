@@ -16,7 +16,7 @@
                         <q-list>
                             <q-item clickable v-ripple v-for="(item, index) in tableData" :key="index">
                                 <q-item-section avatar>
-                                    <GqaAvatar :src="item.user.avatar" />
+                                    <gqa-avatar :src="item.user.avatar" />
                                 </q-item-section>
                                 <q-item-section>
                                     <q-item-label>
@@ -42,8 +42,12 @@
                     </q-scroll-area>
                     <q-toolbar>
                         <q-form ref="newMessageForm" class="gqa-form" style="width: 100%">
-                            <q-input dense v-model="newMessage" rounded outlined @keyup.enter.stop="sendMessage"
-                                :rules="[val => val && val.length > 0 || $t('NeedInput')]" :label="$t('Content')">
+                            <q-input class="col-auto" dense v-model="newMessage" rounded outlined
+                                @keyup.enter.stop="sendMessage" :rules="[val => val && val.length > 0 || $t('NeedInput')]"
+                                :label="$t('Content')">
+                                <template v-slot:append>
+                                    <q-btn flat rounded icon="send" @click="sendMessage"></q-btn>
+                                </template>
                             </q-input>
                         </q-form>
                     </q-toolbar>
@@ -58,9 +62,8 @@ import useTableData from 'src/composables/useTableData'
 import { useQuasar } from 'quasar'
 import { computed, onMounted, ref, watch, nextTick, toRefs } from 'vue'
 import { useI18n } from 'vue-i18n'
-import useConfig from 'src/composables/useConfig';
+import { GqaDefaultUsername, GqaDefaultAvatar } from "src/config/default"
 
-const { GqaDefaultUsername, GqaDefaultAvatar } = useConfig()
 const $q = useQuasar()
 const { t } = useI18n()
 const url = {
@@ -77,7 +80,6 @@ const { oldMessage } = toRefs(props)
 const {
     gqaFrontend,
     pagination,
-    GqaAvatar,
     GqaShowName,
     loading,
     tableData,

@@ -5,18 +5,24 @@
 <div align=center>
 <img src="https://i.loli.net/2020/12/14/cnJoF9r1BXY7Da5.png" width=150" height="150" />
 <h1>Gin-Quasar-Admin<sup>v2</sup></h1>
-<img src="https://img.shields.io/badge/Vue-3.2.45-brightgreen"/> 
-<img src="https://img.shields.io/badge/Quasar-2.10.2-brightgreen"/>                          
-<img src="https://img.shields.io/badge/Go-1.19.3-brightgreen"/>                          
-<img src="https://img.shields.io/badge/Gin-1.8.1-brightgreen"/>                              
-<img src="https://img.shields.io/badge/Gorm-1.24.0-brightgreen"/>                  
+<img src="https://img.shields.io/badge/Vue-3.2.47-brightgreen"/> 
+<img src="https://img.shields.io/badge/Quasar-2.14.3-brightgreen"/>                          
+<img src="https://img.shields.io/badge/Go-1.21.6-brightgreen"/>                          
+<img src="https://img.shields.io/badge/Gin-1.9.1-brightgreen"/>                              
+<img src="https://img.shields.io/badge/Gorm-1.25.6-brightgreen"/>                  
 <img src="https://img.shields.io/badge/License-MIT-brightgreen"/>                                                                 </div>
 
 
 
 
 
-#### 基于Quasar2、Vue3、 Go、Gin、Gorm搭建的全功能管理系统。
+
+
+
+
+
+
+#### 基于Quasar2、Vue3、Vite、 Go、Gin、Gorm搭建的全功能管理系统。
 
 #### 可通过插件形式（和主仓隔离）进行个性化逻辑开发，可通过网页快速配置出个性化网站。
 
@@ -45,7 +51,7 @@ QQ群号：342045316
 
 1. 地址：http://81.68.159.232/
 2. 用户名：admin
-3. 密码：123456
+3. 密码：gqa#123456
 4. 为了他人方便，请不要修改密码等信息。
 
 ### 主要功能：

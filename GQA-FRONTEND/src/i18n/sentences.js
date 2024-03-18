@@ -40,9 +40,9 @@ export default {
         "ru": "Невозможно добавить или отредактировать"
     },
     LoginLayoutWithoutPlugin: {
-        "zh-CN": "未安装任何登录页插件",
+        "zh-CN": "未检测到登录页插件",
         "en-US": "Login page plugin undetected",
-        "ru": "Плагин страницы входа в систему не обнаружен"
+        "ru": "Модуль страницы входа не найден"
     },
     LoginLayoutNotSupport: {
         "zh-CN": "不支持的登录页插件",
@@ -113,5 +113,15 @@ export default {
         "zh-CN": "也许你想要一些更多的功能.",
         "en-US": "Maybe you want some more features.",
         "ru": "Возможно, вам нужно больше функций."
+    },
+    PluginNotSupportLogin: {
+        "zh-CN": "这个插件还不支持门户页.",
+        "en-US": "This plugin does not support the login page yet.",
+        "ru": "Этот модуль не поддерживает страницу входа."
+    },
+    ParentNotThis: {
+        "zh-CN": "父级不能是自己.",
+        "en-US": "Parent cannot be oneself.",
+        "ru": "Отец не может быть самим собой."
     }
 }

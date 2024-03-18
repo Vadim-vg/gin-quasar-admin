@@ -8,16 +8,18 @@ import (
 	gqaModel "github.com/Junvary/gin-quasar-admin/GQA-BACKEND/model"
 	gqaServicePrivate "github.com/Junvary/gin-quasar-admin/GQA-BACKEND/service/private"
 	gqaUtils "github.com/Junvary/gin-quasar-admin/GQA-BACKEND/utils"
+	"github.com/gin-gonic/gin"
 	"github.com/xuri/excelize/v2"
 	"gorm.io/gorm"
+	"slices"
 )
 
-func GetTestDataList(getTestDataList model.RequestGetTestDataList, username string) (err error, exportData []model.GqaPluginExampleTestData, total int64) {
+func GetTestDataList(c *gin.Context, getTestDataList model.RequestGetTestDataList, username string) (err error, exportData []model.PluginExampleTestData, total int64) {
 	pageSize := getTestDataList.PageSize
 	offset := getTestDataList.PageSize * (getTestDataList.Page - 1)
-	var exportDataList []model.GqaPluginExampleTestData
+	var exportDataList []model.PluginExampleTestData
 	var db *gorm.DB
-	if err, db = gqaServicePrivate.DeptDataPermission(username, gqaGlobal.GqaDb.Model(&model.GqaPluginExampleTestData{})); err != nil {
+	if err, db = gqaServicePrivate.DeptDataPermission(c, username, gqaGlobal.GqaDb.Model(&model.PluginExampleTestData{})); err != nil {
 		return err, exportDataList, 0
 	}
 	//配置搜索
@@ -32,12 +34,12 @@ func GetTestDataList(getTestDataList model.RequestGetTestDataList, username stri
 	return err, exportDataList, total
 }
 
-func EditTestData(toEditTestData model.GqaPluginExampleTestData, username string) (err error) {
+func EditTestData(c *gin.Context, toEditTestData model.PluginExampleTestData, username string) (err error) {
 	var db *gorm.DB
-	if err, db = gqaServicePrivate.DeptDataPermission(username, gqaGlobal.GqaDb.Model(&model.GqaPluginExampleTestData{})); err != nil {
+	if err, db = gqaServicePrivate.DeptDataPermission(c, username, gqaGlobal.GqaDb.Model(&model.PluginExampleTestData{})); err != nil {
 		return err
 	}
-	var exportData model.GqaPluginExampleTestData
+	var exportData model.PluginExampleTestData
 	if err = db.Where("id = ?", toEditTestData.Id).First(&exportData).Error; err != nil {
 		return err
 	}
@@ -53,21 +55,21 @@ func EditTestData(toEditTestData model.GqaPluginExampleTestData, username string
 	return err
 }
 
-func AddTestData(toAddTestData model.GqaPluginExampleTestData, username string) (err error) {
+func AddTestData(c *gin.Context, toAddTestData model.PluginExampleTestData, username string) (err error) {
 	var db *gorm.DB
-	if err, db = gqaServicePrivate.DeptDataPermission(username, gqaGlobal.GqaDb.Model(&model.GqaPluginExampleTestData{})); err != nil {
+	if err, db = gqaServicePrivate.DeptDataPermission(c, username, gqaGlobal.GqaDb.Model(&model.PluginExampleTestData{})); err != nil {
 		return err
 	}
 	err = db.Create(&toAddTestData).Error
 	return err
 }
 
-func DeleteTestDataById(id uint, username string) (err error) {
+func DeleteTestDataById(c *gin.Context, id uint, username string) (err error) {
 	var db *gorm.DB
-	if err, db = gqaServicePrivate.DeptDataPermission(username, gqaGlobal.GqaDb.Model(&model.GqaPluginExampleTestData{})); err != nil {
+	if err, db = gqaServicePrivate.DeptDataPermission(c, username, gqaGlobal.GqaDb.Model(&model.PluginExampleTestData{})); err != nil {
 		return err
 	}
-	var exportData model.GqaPluginExampleTestData
+	var exportData model.PluginExampleTestData
 	if err = db.Where("id = ?", id).First(&exportData).Error; err != nil {
 		return err
 	}
@@ -75,10 +77,10 @@ func DeleteTestDataById(id uint, username string) (err error) {
 	return err
 }
 
-func QueryTestDataById(id uint, username string) (err error, exportDataInfo model.GqaPluginExampleTestData) {
-	var exportData model.GqaPluginExampleTestData
+func QueryTestDataById(c *gin.Context, id uint, username string) (err error, exportDataInfo model.PluginExampleTestData) {
+	var exportData model.PluginExampleTestData
 	var db *gorm.DB
-	if err, db = gqaServicePrivate.DeptDataPermission(username, gqaGlobal.GqaDb.Model(&model.GqaPluginExampleTestData{})); err != nil {
+	if err, db = gqaServicePrivate.DeptDataPermission(c, username, gqaGlobal.GqaDb.Model(&model.PluginExampleTestData{})); err != nil {
 		return err, exportData
 	}
 	err = db.Preload("CreatedByUser").Preload("UpdatedByUser").First(&exportData, "id = ?", id).Error
@@ -92,7 +94,7 @@ func ExportTestData(getTestDataList model.RequestGetTestDataList, filePath strin
 		return err
 	}
 	var db = gqaGlobal.GqaDb
-	var exportDataList []model.GqaPluginExampleTestData
+	var exportDataList []model.PluginExampleTestData
 	//这里可以加入查询条件
 	if getTestDataList.Column1 != "" {
 		db = db.Where("column1 like ?", "%"+getTestDataList.Column1+"%")
@@ -126,7 +128,7 @@ func ImportTestData(filename string) error {
 	if err != nil {
 		return err
 	}
-	dataList := make([]model.GqaPluginExampleTestData, 0)
+	dataList := make([]model.PluginExampleTestData, 0)
 	rows, err := file.Rows("Sheet1")
 	if err != nil {
 		return err
@@ -137,14 +139,19 @@ func ImportTestData(filename string) error {
 			return err
 		}
 		if skipHeader {
-			if gqaUtils.CompareStringSlice(row, excelHeader) {
+			rowClone := slices.Clone(row)
+			slices.Sort(rowClone)
+			excelHeaderClone := slices.Clone(excelHeader)
+			slices.Sort(excelHeaderClone)
+			sliceCompare := slices.Compare(rowClone, excelHeaderClone)
+			if sliceCompare == 0 {
 				skipHeader = false
 				continue
 			} else {
 				return errors.New("导入文件存在错误")
 			}
 		}
-		data := model.GqaPluginExampleTestData{
+		data := model.PluginExampleTestData{
 			Column1: row[0],
 			Column2: row[1],
 			Column3: row[2],

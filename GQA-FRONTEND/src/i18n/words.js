@@ -14,15 +14,20 @@ export default {
         "en-US": "Public",
         "ru": "гражданский"
     },
-    SideDrawer: {
+    Sidebar: {
         "zh-CN": "侧边栏",
-        "en-US": "SideDrawer",
+        "en-US": "Sidebar",
         "ru": "Боковая панель"
     },
     Button: {
         "zh-CN": "按钮",
         "en-US": "Button",
         "ru": "Кнопка"
+    },
+    Dense: {
+        "zh-CN": "紧密",
+        "en-US": "Dense",
+        "ru": "Плотный"
     },
     Width: {
         "zh-CN": "宽度",
@@ -57,7 +62,17 @@ export default {
     Start: {
         "zh-CN": "开始",
         "en-US": "Start",
+        "ru": "Остановить"
+    },
+    Stop: {
+        "zh-CN": "停止",
+        "en-US": "Stop",
         "ru": "Запуск"
+    },
+    Interval: {
+        "zh-CN": "间隔",
+        "en-US": "Interval",
+        "ru": "Интервал"
     },
     Init: {
         "zh-CN": "初始化",
@@ -698,5 +713,20 @@ export default {
         "zh-CN": "你的",
         "en-US": "Your",
         "ru": "Ваш"
+    },
+    FullScreen: {
+        "zh-CN": "全屏",
+        "en-US": "full screen",
+        "ru": "Полный экран"
+    },
+    Existing: {
+        "zh-CN": "已有",
+        "en-US": "Existing",
+        "ru": "Существующий"
+    },
+    More: {
+        "zh-CN": "更多",
+        "en-US": "More",
+        "ru": "Больше."
     },
 }

@@ -28,69 +28,77 @@ func (s *ServiceUser) GetUserList(requestUserList model.RequestGetUserList) (err
 	if requestUserList.RealName != "" {
 		db = db.Where("real_name like ?", "%"+requestUserList.RealName+"%")
 	}
+	err = db.Count(&total).Error
 	db = db.Limit(pageSize).Offset(offset).Order(model.OrderByColumn(requestUserList.SortBy, requestUserList.Desc))
 	if requestUserList.DeptCode != "" {
 		dept := model.SysDept{
 			DeptCode: requestUserList.DeptCode,
 		}
 		err = db.Model(&dept).Preload("Role").Preload("Dept").Association("Staff").Find(&userList)
-		err = db.Count(&total).Error
+		total = int64(len(userList))
 		return err, userList, total
 	} else {
 		err = db.Preload("Role").Preload("Dept").Find(&userList).Error
-		err = db.Count(&total).Error
 		return err, userList, total
 	}
 }
 
-func (s *ServiceUser) EditUser(toEditUser model.SysUser) (err error) {
+func (s *ServiceUser) EditUser(c *gin.Context, toEditUser model.SysUser) (err error) {
 	var sysUser model.SysUser
 	if sysUser.Stable == "yesNo_yes" {
-		return errors.New(utils.GqaI18n("StableCantDo") + toEditUser.Username)
+		return errors.New(utils.GqaI18n(c, "StableCantDo") + toEditUser.Username)
 	}
-	if err = global.GqaDb.Where("id = ?", toEditUser.Id).First(&sysUser).Error; err != nil {
+	return global.GqaDb.Transaction(func(tx *gorm.DB) error {
+		if err = tx.Where("sys_user_username = ?", toEditUser.Username).Delete(&model.SysDeptUser{}).Error; err != nil {
+			return err
+		}
+		if err = tx.Where("id = ?", toEditUser.Id).First(&sysUser).Error; err != nil {
+			return err
+		}
+		toEditUser.Password = sysUser.Password
+		//err = tx.Updates(&toEditUser).Error
+		err = tx.Save(&toEditUser).Error
 		return err
-	}
-	//err = global.GqaDb.Updates(&toEditUser).Error
-	err = global.GqaDb.Save(&toEditUser).Error
-	return err
+	})
 }
 
-func (s *ServiceUser) AddUser(toAddUser *model.SysUser) (err error) {
+func (s *ServiceUser) AddUser(c *gin.Context, toAddUser *model.SysUser) (err error) {
 	var user model.SysUser
 	if !errors.Is(global.GqaDb.Where("username = ?", toAddUser.Username).First(&user).Error, gorm.ErrRecordNotFound) {
-		return errors.New(utils.GqaI18n("AlreadyExist") + toAddUser.Username)
+		return errors.New(utils.GqaI18n(c, "AlreadyExist") + toAddUser.Username)
 	}
 	defaultPassword := utils.GetConfigBackend("defaultPassword")
 	if defaultPassword == "" {
-		toAddUser.Password = utils.EncodeMD5("123456")
+		toAddUser.Password, _ = utils.EncodeBcrypt("gqa#123456")
 		err = global.GqaDb.Create(&toAddUser).Error
 		return errors.New("successWithNoDefaultPassword")
 	} else {
-		toAddUser.Password = utils.EncodeMD5(defaultPassword)
+		toAddUser.Password, _ = utils.EncodeBcrypt(defaultPassword)
 		err = global.GqaDb.Create(&toAddUser).Error
 		return err
 	}
 }
 
-func (s *ServiceUser) DeleteUserById(id uint) (err error) {
+func (s *ServiceUser) DeleteUserById(c *gin.Context, id uint) (err error) {
 	var sysUser model.SysUser
-	if sysUser.Stable == "yesNo_yes" {
-		return errors.New(utils.GqaI18n("StableCantDo") + sysUser.Username)
-	}
 	if err = global.GqaDb.Where("id = ?", id).First(&sysUser).Error; err != nil {
 		return err
 	}
-	if err = global.GqaDb.Where("id = ?", id).Unscoped().Delete(&sysUser).Error; err != nil {
-		return err
+	if sysUser.Stable == "yesNo_yes" {
+		return errors.New(utils.GqaI18n(c, "StableCantDo") + sysUser.Username)
 	}
-	var sysDeptUser model.SysDeptUser
-	if err = global.GqaDb.Where("sys_user_username = ?", sysUser.Username).Delete(&sysDeptUser).Error; err != nil {
+	return global.GqaDb.Transaction(func(tx *gorm.DB) error {
+		if err = tx.Where("id = ?", id).Unscoped().Delete(&sysUser).Error; err != nil {
+			return err
+		}
+		var sysDeptUser model.SysDeptUser
+		if err = tx.Where("sys_user_username = ?", sysUser.Username).Delete(&sysDeptUser).Error; err != nil {
+			return err
+		}
+		var sysUserRole model.SysUserRole
+		err = tx.Where("sys_user_username = ?", sysUser.Username).Delete(&sysUserRole).Error
 		return err
-	}
-	var sysUserRole model.SysUserRole
-	err = global.GqaDb.Where("sys_user_username = ?", sysUser.Username).Delete(&sysUserRole).Error
-	return err
+	})
 }
 
 func (s *ServiceUser) GetUserByUsername(username string) (err error, userInfo model.SysUser) {
@@ -114,9 +122,9 @@ func (s *ServiceUser) ResetPassword(id uint) (err error) {
 	defaultPassword := utils.GetConfigBackend("defaultPassword")
 	var pwd string
 	if defaultPassword == "" {
-		pwd = utils.EncodeMD5("123456")
+		pwd, _ = utils.EncodeBcrypt("gqa#123456")
 	} else {
-		pwd = utils.EncodeMD5(defaultPassword)
+		pwd, _ = utils.EncodeBcrypt(defaultPassword)
 	}
 	err = global.GqaDb.Model(&sysUser).Update("password", pwd).Error
 	return err
@@ -155,7 +163,7 @@ func (s *ServiceUser) GetUserMenu(c *gin.Context) (err error, defaultPageList []
 		buttonListString = append(buttonListString, v.SysButtonButtonCode)
 	}
 	//按钮权限去重
-	buttons = utils.RemoveDuplicateElementFromSlice(buttonListString)
+	buttons = utils.SliceSortCompact(buttonListString)
 	//menus切片去重
 	type distinctMenu []model.SysMenu
 	resultMenu := map[string]bool{}
@@ -184,14 +192,15 @@ func (s *ServiceUser) ChangePassword(username string, toChangePassword model.Req
 	if err = global.GqaDb.Where("username = ?", username).First(&sysUser).Error; err != nil {
 		return err
 	}
-	oldPassword := utils.EncodeMD5(toChangePassword.OldPassword)
-	if sysUser.Password != oldPassword {
+	compareOld := utils.CompareBcrypt(sysUser.Password, toChangePassword.OldPassword)
+	if !compareOld {
 		return errors.New("旧密码错误！")
 	}
-	newPassword := utils.EncodeMD5(toChangePassword.NewPassword1)
-	if oldPassword == newPassword {
+	compareOldNew := utils.CompareBcrypt(sysUser.Password, toChangePassword.NewPassword1)
+	if compareOldNew {
 		return errors.New("新旧密码是一样的！")
 	}
+	newPassword, _ := utils.EncodeBcrypt(toChangePassword.NewPassword1)
 	err = global.GqaDb.Model(&sysUser).Update("password", newPassword).Error
 	return err
 }

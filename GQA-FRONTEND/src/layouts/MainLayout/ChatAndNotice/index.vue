@@ -12,9 +12,8 @@ import Notice from './modules/Notice.vue'
 import { useUserStore } from 'src/stores/user'
 import { computed, onMounted, ref, onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
-import useConfig from 'src/composables/useConfig';
+import { GqaDefaultUsername } from "src/config/default"
 
-const { GqaDefaultUsername } = useConfig()
 const $q = useQuasar()
 const userStore = useUserStore()
 const username = computed(() => userStore.GetUsername())
@@ -46,7 +45,7 @@ const changeChatDialogShow = (event) => {
     chatDialogShow.value = event
 }
 const initWebSocket = () => {
-    ws.value = new WebSocket(process.env.API.replace('https://', 'wss://').replace('http://', 'ws://') + 'public/ws/' + username)
+    ws.value = new WebSocket(process.env.API.replace('https://', 'wss://').replace('http://', 'ws://') + 'public/ws/' + username.value)
     ws.value.onopen = websocketOnopen
     ws.value.onerror = websocketOnerror
     ws.value.onmessage = websocketOnmessage
@@ -76,7 +75,7 @@ const websocketOnmessage = (e) => {
             moduleChat.value.receiveMessage(1)
         }
     } else {
-        moduleNotice.value.getTableData()
+        moduleNotice.value.getNoticeAndTodoData()
     }
 }
 const websocketOnclose = (e) => {

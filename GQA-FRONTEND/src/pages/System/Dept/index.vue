@@ -17,37 +17,40 @@
                         <td class="text-center">
                             <GqaDictShow :dictCode="props.item.status" />
                         </td>
-                        <td class="text-center q-gutter-x-xs">
-                            <q-btn flat dense rounded icon="eva-edit-2-outline" color="primary"
-                                @click="showEditForm(props.item)" v-has="'dept:edit'">
-                                <q-tooltip>
-                                    {{ $t('Edit') }}
-                                </q-tooltip>
+                        <td class="text-center q-gutter-x-md">
+                            <q-btn flat dense color="primary" :label="$t('Edit')" @click="showEditForm(props.item)"
+                                v-has="'dept:edit'">
                             </q-btn>
-                            <q-btn flat dense rounded icon="add" color="warning"
-                                @click="showAddChildrenForm(props.item.dept_code)" v-has="'dept:addChildren'">
-                                <q-tooltip>
-                                    {{ $t('Add') + $t('Children') + $t('Dept') }}
-                                </q-tooltip>
-                            </q-btn>
-                            <q-btn flat dense rounded icon="eva-people-outline" color="positive"
-                                @click="showDeptUser(props.item)" v-has="'dept:deptUser'">
-                                <q-tooltip>
-                                    {{ $t('Dept') + $t('User') }}
-                                </q-tooltip>
-                            </q-btn>
-                            <q-btn flat dense rounded icon="delete_outline" color="negative"
-                                @click="handleDelete(props.item)" v-has="'dept:delete'">
-                                <q-tooltip>
-                                    {{ $t('Delete') }}
-                                </q-tooltip>
-                            </q-btn>
+                            <q-btn-dropdown flat dense color="primary" :label="$t('More')" menu-anchor="bottom left"
+                                menu-self="top left">
+                                <q-list dense>
+                                    <q-item clickable v-close-popup @click="showAddChildrenForm(props.item.dept_code)"
+                                        v-has="'dept:addChildren'">
+                                        <q-item-section>
+                                            <q-item-label>{{ $t('Add') + $t('Children') + $t('Dept') }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+
+                                    <q-item clickable v-close-popup @click="showDeptUser(props.item)"
+                                        v-has="'dept:deptUser'">
+                                        <q-item-section>
+                                            <q-item-label>{{ $t('Dept') + $t('User') }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+
+                                    <q-item clickable v-close-popup @click="handleDelete(props.item)" v-has="'dept:delete'">
+                                        <q-item-section>
+                                            <q-item-label>{{ $t('Delete') }}</q-item-label>
+                                        </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </q-btn-dropdown>
                         </td>
                     </template>
                 </q-hierarchy>
             </q-card-section>
         </q-card>
-        <recordDetail ref="recordDetailDialog" @handleFinish="handleFinish" />
+        <recordDetail ref="recordDetailDialog" @handleFinish="handleFinish" :deptTree="deptTree" />
         <DeptUser ref="deptUserDialog" />
     </q-page>
 </template>
@@ -55,12 +58,10 @@
 <script setup>
 import useTableData from 'src/composables/useTableData'
 import { computed, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import recordDetail from './modules/recordDetail'
+import recordDetail from './modules/recordDetail.vue'
 import { ChangeNullChildren2Array } from 'src/utils/arrayAndTree'
-import DeptUser from './modules/DeptUser'
+import DeptUser from './modules/DeptUser.vue'
 
-const { t } = useI18n()
 const url = {
     list: 'dept/get-dept-list',
     delete: 'dept/delete-dept-by-id',
@@ -76,6 +77,7 @@ const columns = computed(() => {
     ]
 })
 const {
+    t,
     pagination,
     GqaDictShow,
     GqaShowName,

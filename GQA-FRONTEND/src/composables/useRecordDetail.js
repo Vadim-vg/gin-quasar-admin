@@ -1,5 +1,5 @@
 import { DictOptions } from 'src/utils/dict'
-import { onMounted, ref, computed, reactive } from 'vue'
+import { onMounted, ref, computed, reactive, inject } from 'vue'
 import { postAction } from 'src/api/manage'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
@@ -9,6 +9,7 @@ export default function useRecordDetail(url, emit) {
     const { t } = useI18n()
     const $q = useQuasar()
     const dictOptions = ref({})
+    const bus = inject('bus')
     onMounted(async () => {
         dictOptions.value = await DictOptions()
     })
@@ -100,9 +101,11 @@ export default function useRecordDetail(url, emit) {
             })
         }
     }
-    const { showDateTime, showDate, gqaFrontend, gqaBackend, GqaDictShow, GqaShowName, GqaAvatar, } = useCommon()
+    const { showDateTime, showDate, gqaFrontend, gqaBackend, GqaDictShow, GqaShowName, } = useCommon()
     return {
-        GqaAvatar,
+        $q,
+        t,
+        bus,
         GqaShowName,
         GqaDictShow,
         gqaFrontend,

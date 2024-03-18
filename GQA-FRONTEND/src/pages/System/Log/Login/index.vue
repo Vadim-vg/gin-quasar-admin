@@ -3,16 +3,15 @@
         <q-card flat>
             <q-card-section class="row q-gutter-x-md items-center">
                 <q-input outlined dense style="width: 20%" v-model="queryParams.login_username" :label="$t('User')" />
-                <q-select outlined dense style="width: 20%" v-model="queryParams.login_success"
-                    :options="dictOptions.yesNo" emit-value map-options :label="$t('Login') + $t('Success')"
+                <q-select outlined dense style="width: 20%" v-model="queryParams.login_success" :options="dictOptions.yesNo"
+                    emit-value map-options :label="$t('Login') + $t('Success')"
                     :option-label="opt => Object(opt) === opt && 'label' in opt ? $t(opt.label) : '- Null -'" />
                 <q-btn color="primary" @click="handleSearch" :label="$t('Search')" />
                 <q-btn color="primary" @click="resetSearch" :label="$t('Reset')" />
             </q-card-section>
             <q-card-section>
-                <q-table row-key="id" separator="cell" :rows="tableData" :columns="columns"
-                    v-model:pagination="pagination" :rows-per-page-options="pageOptions" :loading="loading"
-                    @request="onRequest">
+                <q-table row-key="id" separator="cell" :rows="tableData" :columns="columns" v-model:pagination="pagination"
+                    :rows-per-page-options="pageOptions" :loading="loading" @request="onRequest">
                     <template v-slot:top="props">
                         <q-space />
                         <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
@@ -32,18 +31,12 @@
                         </q-td>
                     </template>
                     <template v-slot:body-cell-actions="props">
-                        <q-td :props="props" class="q-gutter-x-xs">
-                            <q-btn flat dense rounded icon="zoom_in" color="warning" @click="showMemo(props.row.memo)"
+                        <q-td :props="props" class="q-gutter-x-md">
+                            <q-btn flat dense color="warning" @click="showMemo(props.row.memo)" :label="$t('Detail')"
                                 v-has="'log-login:detail'">
-                                <q-tooltip>
-                                    {{ $t('Detail') }}
-                                </q-tooltip>
                             </q-btn>
-                            <q-btn flat dense rounded icon="delete_outline" color="negative"
-                                @click="handleDelete(props.row)" v-has="'log-login:delete'">
-                                <q-tooltip>
-                                    {{ $t('Delete') }}
-                                </q-tooltip>
+                            <q-btn flat dense color="negative" :label="$t('Delete')" @click="handleDelete(props.row)"
+                                v-has="'log-login:delete'">
                             </q-btn>
                         </q-td>
                     </template>
@@ -63,11 +56,9 @@
 <script setup>
 import useTableData from 'src/composables/useTableData'
 import { computed, onMounted, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import useCommon from 'src/composables/useCommon'
 
 const { showDateTime } = useCommon()
-const { t } = useI18n()
 const url = {
     list: 'log/get-log-login-list',
     delete: 'log/delete-log-login-by-id',
@@ -86,6 +77,7 @@ const columns = computed(() => {
     ]
 })
 const {
+    t,
     dictOptions,
     pagination,
     queryParams,

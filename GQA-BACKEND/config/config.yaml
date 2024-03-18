@@ -1,6 +1,12 @@
+log:
+    path: gqalogs
+    filename: gqa-log
+    maxSize: 20
+    maxBackups: 10
+    maxAge: 7
 mysql:
     host:
-    port: 
+    port:
     user:
     password:
     database:
@@ -13,15 +19,8 @@ system:
     errorCode: 0
     errorMessage: Failed
     bindError: params verification failed
-    genPluginPath: template/gqaplugintemplate
+    genPluginToPath: gqagen/plugins
+    genPluginTemplatePath: template/genplugin
     importPath: ./template/import
     exportPath: ./template/export
     templatePath: ./template/template
-zap:
-    prefix: '[gin-quasar-admin]'
-    level: info
-    path: gqa-log
-    filename: gqa-log
-    maxSize: 200
-    maxBackups: 10
-    maxAge: 8

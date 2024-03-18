@@ -9,7 +9,17 @@ export const PublicRoutes = [
     {
         path: '/new-tab',
         component: () => import('layouts/NewTabLayout/index.vue'),
-        children: []
+        children: [
+            // 非鉴权、新tab页面 在下面配置，例如下面的路由（插件内容）:
+            // {
+            //     path: 'plugin-bp/bp/screen',
+            //     component: () => import('src/plugins/Bp/Screen/index.vue')
+            // },
+            // {
+            //     path: 'add-ywd',
+            //     component: () => import('src/plugins/YWD/Ywd/modules/addYwd.vue')
+            // },
+        ]
     }
 
     // // Always leave this as last one,
@@ -25,11 +35,14 @@ export const PublicRoutes = [
     // }
 ]
 
+const MainLayoutFile = import.meta.glob('../layouts/MainLayout/index.vue')
+
 export const PrivateRoutes = [
     {
         path: '/',
         redirect: { path: '/dashboard' },
-        component: () => import('layouts/MainLayout/index.vue'),
+        component: MainLayoutFile['../layouts/MainLayout/index.vue'],
+        // component: () => import('layouts/MainLayout/index.vue'),
         children: []
     }
 ]

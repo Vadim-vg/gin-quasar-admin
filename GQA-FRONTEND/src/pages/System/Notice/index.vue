@@ -5,16 +5,15 @@
                 <q-input outlined dense style="width: 20%" v-model="queryParams.notice_title" :label="$t('Title')" />
                 <q-select outlined dense style="width: 20%" v-model="queryParams.notice_type"
                     :options="dictOptions.noticeType" emit-value map-options :label="$t('Notice') + $t('Type')" />
-                <q-select outlined dense style="width: 20%" v-model="queryParams.notice_sent"
-                    :options="dictOptions.yesNo" emit-value map-options :label="$t('Sent')"
+                <q-select outlined dense style="width: 20%" v-model="queryParams.notice_sent" :options="dictOptions.yesNo"
+                    emit-value map-options :label="$t('Sent')"
                     :option-label="opt => Object(opt) === opt && 'label' in opt ? $t(opt.label) : '- Null -'" />
                 <q-btn color="primary" @click="handleSearch" :label="$t('Search')" />
                 <q-btn color="primary" @click="resetSearch" :label="$t('Reset')" />
             </q-card-section>
             <q-card-section>
-                <q-table row-key="id" separator="cell" :rows="tableData" :columns="columns"
-                    v-model:pagination="pagination" :rows-per-page-options="pageOptions" :loading="loading"
-                    @request="onRequest">
+                <q-table row-key="id" separator="cell" :rows="tableData" :columns="columns" v-model:pagination="pagination"
+                    :rows-per-page-options="pageOptions" :loading="loading" @request="onRequest">
                     <template v-slot:top="props">
                         <q-btn color="primary" @click="showAddForm()" :label="$t('Add') + ' ' + $t('Notice')"
                             v-has="'notice:add'" />
@@ -33,18 +32,12 @@
                         </q-td>
                     </template>
                     <template v-slot:body-cell-actions="props">
-                        <q-td :props="props" class="q-gutter-x-xs">
-                            <q-btn flat dense rounded icon="send" color="warning" @click="sendMessage(props.row)"
+                        <q-td :props="props" class="q-gutter-x-md">
+                            <q-btn flat dense color="warning" @click="sendMessage(props.row)" :label="$t('Send')"
                                 v-has="'notice:send'" v-if="props.row.notice_sent === 'yesNo_no'">
-                                <q-tooltip>
-                                    {{ $t('Send') }}
-                                </q-tooltip>
                             </q-btn>
-                            <q-btn flat dense rounded icon="delete_outline" color="negative"
-                                @click="handleDelete(props.row)" v-has="'notice:delete'">
-                                <q-tooltip>
-                                    {{ $t('Delete') }}
-                                </q-tooltip>
+                            <q-btn flat dense color="negative" :label="$t('Delete')" @click="handleDelete(props.row)"
+                                v-has="'notice:delete'">
                             </q-btn>
                         </q-td>
                     </template>
@@ -57,14 +50,10 @@
 
 <script setup>
 import useTableData from 'src/composables/useTableData'
-import { useQuasar } from 'quasar'
 import { postAction } from 'src/api/manage'
 import { computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import recordDetail from './modules/recordDetail'
+import recordDetail from './modules/recordDetail.vue'
 
-const $q = useQuasar()
-const { t } = useI18n()
 const url = {
     list: 'notice/get-notice-list',
     delete: 'notice/delete-notice-by-id',
@@ -80,6 +69,8 @@ const columns = computed(() => {
     ]
 })
 const {
+    $q,
+    t,
     dictOptions,
     pagination,
     queryParams,
@@ -98,7 +89,7 @@ const {
 } = useTableData(url)
 
 onMounted(async () => {
-    pagination.value.sortBy = 'created_at'
+    pagination.value.sortBy = 'id'
     pagination.value.descending = true
     getTableData()
 })

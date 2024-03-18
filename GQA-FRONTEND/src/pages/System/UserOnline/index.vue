@@ -7,9 +7,8 @@
                 <q-btn color="primary" @click="resetSearch" :label="$t('Reset')" />
             </q-card-section>
             <q-card-section>
-                <q-table row-key="id" separator="cell" :rows="tableData" :columns="columns"
-                    v-model:pagination="pagination" :rows-per-page-options="pageOptions" :loading="loading"
-                    @request="onRequest">
+                <q-table row-key="id" separator="cell" :rows="tableData" :columns="columns" v-model:pagination="pagination"
+                    :rows-per-page-options="pageOptions" :loading="loading" @request="onRequest">
                     <template v-slot:top="props">
                         <span class="text-h6">
                             {{ $t('UserOnline') }}
@@ -20,7 +19,7 @@
                     </template>
                     <template v-slot:body-cell-avatar="props">
                         <q-td :props="props">
-                            <GqaAvatar :src="props.row.avatar" />
+                            <gqa-avatar :src="props.row.avatar" />
                         </q-td>
                     </template>
                     <template v-slot:body-cell-username="props">
@@ -40,11 +39,8 @@
                     </template>
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-x-xs">
-                            <q-btn flat dense rounded icon="mdi-logout-variant" color="negative"
-                                @click="handleKickOut(props.row)" v-has="'user-online:kick'">
-                                <q-tooltip>
-                                    {{ $t('KickOut') }}
-                                </q-tooltip>
+                            <q-btn flat dense color="negative" :label="$t('KickOut')" @click="handleKickOut(props.row)"
+                                v-has="'user-online:kick'">
                             </q-btn>
                         </q-td>
                     </template>
@@ -56,13 +52,9 @@
 
 <script setup>
 import useTableData from 'src/composables/useTableData'
-import { useQuasar } from 'quasar'
 import { postAction } from 'src/api/manage'
 import { computed, onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
 
-const $q = useQuasar()
-const { t } = useI18n()
 const url = {
     list: 'user-online/get-user-online-list',
     kick: 'user-online/kick-online-user',
@@ -77,10 +69,11 @@ const columns = computed(() => {
     ]
 })
 const {
+    $q,
+    t,
     pagination,
     queryParams,
     pageOptions,
-    GqaAvatar,
     loading,
     tableData,
     onRequest,
